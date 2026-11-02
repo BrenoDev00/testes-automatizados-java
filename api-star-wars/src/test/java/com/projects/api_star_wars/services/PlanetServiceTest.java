@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -86,5 +87,15 @@ public class PlanetServiceTest {
         assertThatThrownBy(() ->
                 this.planetService.listByName(PLANET.getName())
         ).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void listAllPlanets(){
+        when(this.planetRepository.findAll()).thenReturn(List.of(PLANET));
+
+        List<Planet> planetList = this.planetService.listAll();
+
+        assertThat(planetList).isNotNull();
+        assertThat(planetList).isEqualTo(List.of(PLANET));
     }
 }
