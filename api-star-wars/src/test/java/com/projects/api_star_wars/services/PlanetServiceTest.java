@@ -2,6 +2,7 @@ package com.projects.api_star_wars.services;
 
 import com.projects.api_star_wars.models.Planet;
 import com.projects.api_star_wars.repositories.PlanetRepository;
+import org.h2.table.Plan;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,6 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.projects.api_star_wars.constants.PlanetConstants.PLANET;
 import static com.projects.api_star_wars.constants.PlanetConstants.INVALID_PLANET;
@@ -39,5 +44,28 @@ public class PlanetServiceTest {
         when(this.planetRepository.save(INVALID_PLANET)).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() -> this.planetService.create(INVALID_PLANET)).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    public void findPlanetById(){
+        UUID planetId = UUID.randomUUID();
+
+        when(this.planetRepository.findById(planetId)).thenReturn(Optional.of(PLANET));
+
+        Planet searchedPlanet = this.planetService.listById(planetId);
+
+        assertThat(searchedPlanet).isNotNull();
+        assertThat(searchedPlanet).isEqualTo(PLANET);
+    }
+
+    @Test
+    public void findInexistentPlanetById(){
+        UUID planetId = UUID.randomUUID();
+
+        when(this.planetRepository.findById(planetId)).thenThrow(NoSuchElementException.class);
+
+        assertThatThrownBy(() ->
+                this.planetService.listById(planetId)
+        ).isInstanceOf(NoSuchElementException.class);
     }
 }

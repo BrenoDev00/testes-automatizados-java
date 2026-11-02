@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/planets")
@@ -20,6 +21,16 @@ public class PlanetController {
         List<Planet> planets = this.planetService.listAll();
 
         return ResponseEntity.ok().body(planets);
+    }
+
+    @GetMapping("/{planetId}")
+    public ResponseEntity<Planet> getById(@PathVariable("planetId") UUID planetId){
+        try{
+            Planet planet = this.planetService.listById(planetId);
+            return ResponseEntity.ok().body(planet);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
