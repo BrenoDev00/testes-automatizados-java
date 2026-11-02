@@ -68,4 +68,23 @@ public class PlanetServiceTest {
                 this.planetService.listById(planetId)
         ).isInstanceOf(NoSuchElementException.class);
     }
+
+    @Test
+    public void findPlanetByName(){
+        when(this.planetRepository.findByName(PLANET.getName())).thenReturn(Optional.of(PLANET));
+
+        Planet searchedPlanet = this.planetService.listByName(PLANET.getName());
+
+        assertThat(searchedPlanet).isNotNull();
+        assertThat(searchedPlanet).isEqualTo(PLANET);
+    }
+
+    @Test
+    public void findInexistentPlanetByName(){
+        when(this.planetRepository.findByName(PLANET.getName())).thenThrow(NoSuchElementException.class);
+
+        assertThatThrownBy(() ->
+                this.planetService.listByName(PLANET.getName())
+        ).isInstanceOf(NoSuchElementException.class);
+    }
 }

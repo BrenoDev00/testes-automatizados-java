@@ -20,7 +20,12 @@ public class PlanetService {
 
     public Planet listById(UUID planetId){
         return this.planetRepository.findById(planetId)
-                .orElseThrow(() -> new NoSuchElementException("Planeta não econtrado."));
+                .orElseThrow(() -> new NoSuchElementException());
+    }
+
+    public Planet listByName(String planetName){
+        return this.planetRepository.findByName(planetName)
+                .orElseThrow(() -> new NoSuchElementException());
     }
 
     public Planet create(Planet planet){

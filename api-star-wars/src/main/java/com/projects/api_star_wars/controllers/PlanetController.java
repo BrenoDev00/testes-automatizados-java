@@ -33,6 +33,16 @@ public class PlanetController {
         }
     }
 
+    @GetMapping("/name/{planetName}")
+    public ResponseEntity<Planet> getByName(@PathVariable("planetName") String planetName){
+        try{
+            Planet planet = this.planetService.listByName(planetName);
+            return ResponseEntity.ok().body(planet);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     ResponseEntity<Planet> post(@RequestBody Planet planet){
         Planet createdPlanet = this.planetService.create(planet);
