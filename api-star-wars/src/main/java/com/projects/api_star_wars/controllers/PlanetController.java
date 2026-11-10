@@ -49,4 +49,14 @@ public class PlanetController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPlanet);
     }
+
+    @DeleteMapping("/{planetId}")
+    ResponseEntity<Void> delete(@PathVariable("planetId") UUID planetId){
+        try{
+            this.planetService.deleteById(planetId);
+            return ResponseEntity.noContent().build();
+        }catch(Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

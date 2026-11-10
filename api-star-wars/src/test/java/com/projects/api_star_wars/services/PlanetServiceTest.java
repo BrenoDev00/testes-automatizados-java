@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -19,8 +20,8 @@ import java.util.UUID;
 
 import static com.projects.api_star_wars.constants.PlanetConstants.PLANET;
 import static com.projects.api_star_wars.constants.PlanetConstants.INVALID_PLANET;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) // configuração de classe de teste
@@ -97,5 +98,24 @@ public class PlanetServiceTest {
 
         assertThat(planetList).isNotNull();
         assertThat(planetList).isEqualTo(List.of(PLANET));
+    }
+
+    @Test
+    public void deleteInexistentPlanetById(){
+        UUID planetId = UUID.randomUUID();
+
+       when(this.planetRepository.findById(planetId)).thenReturn(Optional.empty());
+
+       assertThatThrownBy(() -> this.planetService.deleteById(planetId)).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void deletePlanetById(){
+        UUID planetId = UUID.randomUUID();
+
+        when(this.planetRepository.findById(planetId)).thenReturn(Optional.of(PLANET));
+
+        assertThatCode(() ->
+                this.planetService.deleteById(planetId)).doesNotThrowAnyException();
     }
 }

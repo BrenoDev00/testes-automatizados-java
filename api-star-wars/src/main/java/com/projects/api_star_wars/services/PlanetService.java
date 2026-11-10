@@ -31,4 +31,10 @@ public class PlanetService {
     public Planet create(Planet planet){
         return this.planetRepository.save(planet);
     }
+
+    public void deleteById(UUID planetId){
+        this.listById(planetId);
+
+        this.planetRepository.deleteById(planetId);
+    }
 }
